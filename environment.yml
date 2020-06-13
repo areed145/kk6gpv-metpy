@@ -1,0 +1,16 @@
+name: metpy
+channels:
+  - pywr
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.7
+  - pip
+  - metpy
+  - cartopy
+  - siphon==0.8.0
+  - pip:
+    - pymongo==3.9.0
+    - pandas
+    - numpy
+    - matplotlib
