@@ -8,7 +8,7 @@ httplib2==0.18.0
 idna==2.8
 isort==5.0.9
 itsdangerous==1.1.0
-lazy-object-proxy==1.4.2
+lazy-object-proxy==1.5.0
 MarkupSafe==1.1.1
 MetPy==0.12.1
 mccabe==0.6.1
