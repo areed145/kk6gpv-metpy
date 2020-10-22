@@ -6,7 +6,7 @@ import io
 import os
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from siphon.simplewebservice.wyoming import WyomingUpperAir
 from metpy.units import units
 from metpy.plots import add_timestamp, SkewT, Hodograph
@@ -77,7 +77,7 @@ def generate_sounding_plot(site, date=None):
     if date:
         request_time = datetime.strptime(date, "%Y%m%d%H")
     else:
-        now = datetime.utcnow() - timedelta(hours=2)
+        now = datetime.now(timezone.utc) - timedelta(hours=2)
         request_time = now.replace(
             hour=(now.hour // 12) * 12, minute=0, second=0
         )
@@ -99,7 +99,7 @@ def generate_sounding_plot(site, date=None):
         fs.delete(file._id)
     except Exception:
         pass
-    fs.put(b64, filename=site, timestamp=datetime.utcnow())
+    fs.put(b64, filename=site, timestamp=datetime.now(timezone.utc))
 
     plt.close(skewt)
 
@@ -184,7 +184,7 @@ def generate_rap_plots():
     colors = ["#cbff30", "#7fff30", "#30ff56", "#129e10"]
     cm = LinearSegmentedColormap.from_list("cm", colors, N=len(colors) * 10)
 
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
 
     # Define datasets to wanted.
     prop = "Relative_humidity_isobaric"
@@ -286,16 +286,16 @@ def generate_rap_plots():
             fs.delete(file._id)
         except Exception:
             pass
-        fs.put(b64, filename=name, timestamp=datetime.utcnow())
+        fs.put(b64, filename=name, timestamp=datetime.now(timezone.utc))
 
         fig.clear()
         plt.close(fig)
 
 
 if __name__ == "__main__":
-    next_hour = datetime.utcnow()
+    next_hour = datetime.now(timezone.utc)
     while True:
-        if datetime.utcnow() >= next_hour:
+        if datetime.now(timezone.utc) >= next_hour:
             for station in station_list:
                 try:
                     generate_sounding_plot(station)
@@ -304,7 +304,7 @@ if __name__ == "__main__":
             generate_rap_plots()
 
             print("got metpy")
-            next_hour = datetime.utcnow() + timedelta(hours=1)
+            next_hour = datetime.now(timezone.utc) + timedelta(hours=1)
         else:
             print("skipping updates")
         time.sleep(60 * 10)
